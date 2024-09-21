@@ -1,9 +1,9 @@
 const users = [
   {
     "id": 1,
-    "firstName": "Sushil",
-    "lastName": "Patil",
-    "hobby": "Singing"
+    "firstName": "Rakshit",
+    "lastName": "Shetty",
+    "hobby": "Mix martial arts (MMA)"
   },
   {
     "id": 2,
@@ -11,13 +11,11 @@ const users = [
     "lastName": "Kamat",
     "hobby": "Reading"
   },
-
   {
     "id": 3,
-    "firstName": "Rakshit",
-    "lastName": "Shetty",
-    "hobby": "MMA"
+    "firstName": "Sushil",
+    "lastName": "Patil",
+    "hobby": "Singing"
   }
 ]
-
 export default users;
