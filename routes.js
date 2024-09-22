@@ -42,14 +42,21 @@ export const createNewUser = (req, res) => {
 
 export const updateUserDetails = (req, res) => {
     const id = req.params.id
-    const user = users.find(user => user.id == id) // Getting user by ID
-    if (!user) {
+    const { firstName, lastName, hobby } = req.body
+    const userIndex = users.findIndex(user => user.id == id) // Getting user index
+    console.log(userIndex)
+
+    if (userIndex === -1) {
         return res.status(404).json({ message: `User Not found..` })
     }
-    const keys = Object.keys(user) // Getting all the keys 
-    keys.forEach((key) => {
-        user[key] = req.body[key] // Adding the updated values.
-    })
+
+    const updatedUser = {
+        ...users[userIndex], // copying the previous object (existing user)
+        firstName: firstName,
+        lastName: lastName,
+        hobby: hobby
+    }
+    users[userIndex] = updatedUser // Replacing updated object.
     res.json(users);
 }
 
