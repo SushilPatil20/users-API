@@ -15,9 +15,10 @@ const validateFields = (req, res, next) => {
         }
     })
 
-    if (checkIfErrors(errors)) return res.send(errors) // Return errors if there is any. 
+    if (checkIfErrors(errors)) return res.status(400).json(errors) // Return errors if required filed is missing. 
 
     // ------------------- Check if entered data is valid ------------------- 
+
     if (!isValidString(user.firstName)) {
         errors.push(`firstName must be valid string.`);
     }
@@ -28,9 +29,9 @@ const validateFields = (req, res, next) => {
         errors.push(`hobby must be valid string.`);
     }
 
-    if (checkIfErrors(errors)) return res.send(errors) // Return errors if there is any.
+    if (checkIfErrors(errors)) return res.status(400).json(errors) // Return errors if there is a invalid data.
 
-    next();
+    next(); // Passes control to the next middleware function.
 }
 
 export default validateFields;
