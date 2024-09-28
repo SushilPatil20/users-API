@@ -1,6 +1,6 @@
-import users from "./data/users.js"
+import users from "../data/users.js"
 import { v4 as uuidv4 } from "uuid";
-import { notFound } from "./utils/helpers.js";
+import { notFound } from "../utils/helpers.js";
 
 // ------------------- Getting all users  -------------------
 

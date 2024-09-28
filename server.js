@@ -1,12 +1,21 @@
 import express from "express";
+import { config as configDotenv } from "dotenv"; // Explicit import
+
+// Load environment variables from .env file
+configDotenv();
+
+import { connetDB } from "./config/db.js"
 
 // -------------- Middlerware to log the request details on every request. --------------
 import requestLogger from "./middlewares/requestLogger.js";
 const app = express();
-const PORT = 4000
+const PORT = process.env.PORT || 4000
+
+connetDB(process.env.MONGO_URI);
+
 
 // -------------- Route Callbacks --------------
-import { getUsers, getUser, createNewUser, updateUserDetails, deleteUser } from "./routes.js";
+import { getUsers, getUser, createNewUser, updateUserDetails, deleteUser } from "./routes/userRoutes.js";
 
 
 // -------------- middlare to validate required fields. --------------
