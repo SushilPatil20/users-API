@@ -1,20 +1,25 @@
-import users from "../data/users.js"
-import { v4 as uuidv4 } from "uuid";
 import { notFound } from "../utils/helpers.js";
+import User from "../models/userModel.js"
 
 // ------------------- Getting all users  -------------------
 
-export const getUsers = (req, res) => {
-    return res.status(200).json(users)
+export const getUsers = async (req, res) => {
+    try {
+        const users = await User.find().lean(); // .lean method to optimize a performance.
+        return res.status(200).json(users)
+
+    } catch (error) {
+        console.log("Error fetching data..", error);
+    }
 }
 
 // ------------------- Getting single user by id  -------------------
 
-export const getUser = (req, res) => {
-    const userId = req.params.id
-    const user = users.find(user => user.id == userId)
+export const getUser = async (req, res) => {
+    const id = req.params.id
+    const user = await User.findById(id)
     if (!user) {
-        notFound(res);
+        return notFound(res);
     }
     else {
         res.status(200).json(user) // Return the found user
@@ -24,52 +29,53 @@ export const getUser = (req, res) => {
 
 // ------------------- Creating new user -------------------
 
-export const createNewUser = (req, res) => {
-    const user = req.body
+export const createNewUser = async (req, res) => {
+    const { firstName, lastName, hobbies } = req.body
     // ------------------- Creating new user if all required field are given -------------------
-    const newUser = {
-        id: uuidv4(), //  Generates a unique identifier
-        ...user
-    }
-
-    users.push(newUser)
-    return res.status(201).json({
-        message: `New resource created`,
-        users: users
-    });
+    const newUser = new User({
+        firstName,
+        lastName,
+        hobbies: hobbies || []
+    })
+    const savedUser = await newUser.save();
+    return res.status(201).json({ message: `New resource created`, user: savedUser });
 }
 
 // ------------------- Update User Details-------------------
 
-export const updateUserDetails = (req, res) => {
+export const updateUserDetails = async (req, res) => {
     const id = req.params.id
-    const { firstName, lastName, hobby } = req.body
-    const userIndex = users.findIndex(user => user.id == id) // Getting user index
+    const { firstName, lastName, hobbies } = req.body
 
-    if (userIndex === -1) {
-        notFound(res)
+    try {
+        const updatedUser = await User.findByIdAndUpdate(id, {
+            $set: {
+                firstName,
+                lastName,
+                hobbies
+            }
+        }, { new: true });
+        if (!updatedUser) {
+            return notFound(res);
+        }
+        return res.status(200).json({ message: "User is Updated.", updatedUser: updatedUser })
     }
-
-    const updatedUser = {
-        ...users[userIndex], // Copying the previous object (existing user)
-        firstName: firstName,
-        lastName: lastName,
-        hobby: hobby
+    catch (error) {
+        return res.status(500).json({ message: "Error while updating user", error: error.message });
     }
-    users[userIndex] = updatedUser // Replacing updated object.
-    res.json(users);
 }
 
 
 // ------------------- Update User Details-------------------
 
-export const deleteUser = (req, res) => {
+export const deleteUser = async (req, res) => {
     const id = req.params.id
-    const user = users.find(user => user.id == id) // Finding user by ID
-    if (!user) {
-        notFound(res);
+
+    // Fetch the user by _id
+    const deletedUser = await User.findByIdAndDelete(id);
+    if (!deletedUser) {
+        return notFound(res);
     }
-    users.filter(user => user.id != id); // Removing user by ID
     return res.status(204).send();
 }
 

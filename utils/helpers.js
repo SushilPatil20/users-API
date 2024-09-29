@@ -8,7 +8,7 @@
  */
 export const isValidString = (value) => {
     // Check if value is a string and is not an empty string
-    return typeof value === 'string' && value.trim().length > 0;
+    return value !== null && value !== undefined && typeof value === 'string' && value.trim().length > 0;
 }
 
 

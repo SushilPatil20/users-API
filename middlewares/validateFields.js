@@ -1,11 +1,19 @@
 import { checkIfErrors, isValidString } from "../utils/helpers.js"
 
+/**
+ * 
+ * @param {Object} req 
+ * @param {Object} res 
+ * @param {Object} next 
+ * @returns void
+ */
+
 // ------------------- Validation logic gose here -------------------
 
 const validateFields = (req, res, next) => {
     const errors = []
     const user = req.body
-    const requiredFields = ['firstName', 'lastName', 'hobby']
+    const requiredFields = ['firstName', 'lastName']
     const keys = Object.keys(user) // Getting all the keys from body
 
     // ------------------- Validations for all required fileds -------------------
@@ -25,9 +33,7 @@ const validateFields = (req, res, next) => {
     if (!isValidString(user.lastName)) {
         errors.push(`lastName must be valid string.`);
     }
-    if (!isValidString(user.hobby)) {
-        errors.push(`hobby must be valid string.`);
-    }
+
 
     if (checkIfErrors(errors)) return res.status(400).json(errors) // Return errors if there is a invalid data.
 
