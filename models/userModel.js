@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+
+// ---------------------------- User schema ----------------------------
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
@@ -14,5 +16,7 @@ const userSchema = new mongoose.Schema({
         type: [String],
     }
 }, { timestamps: true })
+
+// ---------------------------- Adding the schema to User Collection. ----------------------------
 const User = mongoose.model('User', userSchema);
 export default User;
